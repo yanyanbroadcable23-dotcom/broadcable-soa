@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Broadcable SOA SMS Maker</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #050505;
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        padding: 30px;
+      }
+
+      .container {
+        max-width: 1300px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+      }
+
+      .card {
+        background: #000;
+        border: 1px solid #222;
+        border-radius: 24px;
+        padding: 28px;
+      }
+
+      h1 {
+        color: #93c5fd;
+        margin-bottom: 10px;
+        font-size: 32px;
+      }
+
+      .subtitle {
+        color: #9ca3af;
+        line-height: 1.5;
+        margin-bottom: 30px;
+      }
+
+      h2 {
+        color: #93c5fd;
+        margin-bottom: 25px;
+        font-size: 28px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        margin-top: 20px;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      input {
+        width: 100%;
+        padding: 16px;
+        border-radius: 16px;
+        border: 1px solid #3f3f46;
+        background: #050505;
+        color: white;
+        font-size: 16px;
+      }
+
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #60a5fa;
+      }
+
+      input::placeholder {
+        color: #71717a;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 650px;
+        resize: vertical;
+        padding: 18px;
+        border-radius: 18px;
+        border: 1px solid #3f3f46;
+        background: #050505;
+        color: white;
+        font-size: 17px;
+        line-height: 1.6;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        padding: 14px 20px;
+        border: none;
+        border-radius: 14px;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+
+      .copy-btn {
+        background: #2563eb;
+        color: white;
+      }
+
+      .clear-btn {
+        background: #18181b;
+        border: 1px solid #3f3f46;
+        color: white;
+      }
+
+      .stats {
+        margin-top: 18px;
+        color: #9ca3af;
+        font-size: 14px;
+      }
+
+      .success {
+        margin-top: 10px;
+        color: #22c55e;
+        font-weight: bold;
+      }
+
+      /* MOBILE OPTIMIZATION */
+
+      @media (max-width: 900px) {
+        body {
+          padding: 14px;
+        }
+
+        .container {
+          grid-template-columns: 1fr;
+          gap: 18px;
+        }
+
+        .card {
+          padding: 20px;
+          border-radius: 20px;
+        }
+
+        h1 {
+          font-size: 28px;
+          line-height: 1.2;
+        }
+
+        h2 {
+          font-size: 24px;
+        }
+
+        textarea {
+          min-height: 500px;
+          font-size: 16px;
+        }
+
+        input {
+          font-size: 16px;
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Broadcable SOA SMS Maker</h1>
+
+    <p class="subtitle">
+      Generate subscriber SOA SMS instantly with automatic billing period and
+      disconnection date calculation.
+    </p>
+
+    <div class="container">
+      <!-- LEFT PANEL -->
+
+      <div class="card">
+        <h2>Subscriber Details</h2>
+
+        <label>Customer Name</label>
+
+        <input
+          type="text"
+          id="customerName"
+          placeholder="Enter subscriber name"
+        />
+
+        <label>Account Number</label>
+
+        <input
+          type="text"
+          id="accountNumber"
+          placeholder="Enter account number"
+        />
+
+        <label>Service Plan</label>
+
+        <input type="text" id="servicePlan" placeholder="Example: 100 Mbps" />
+
+        <label>Due Date / Billing End Date</label>
+
+        <input type="date" id="dueDate" />
+
+        <label>Current Bill</label>
+
+        <input type="number" id="currentBill" placeholder="0.00" step="0.01" />
+
+        <div class="buttons">
+          <button class="clear-btn" onclick="clearForm()">Clear Form</button>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+
+      <div class="card">
+        <h2>SMS Preview</h2>
+
+        <textarea id="smsPreview" readonly></textarea>
+
+        <div class="buttons">
+          <button class="copy-btn" onclick="copySMS()">Copy SMS</button>
+        </div>
+
+        <div class="stats" id="stats">Characters: 0 | SMS Parts: 0</div>
+
+        <div id="copyStatus"></div>
+      </div>
+    </div>
+
+    <script>
+      const fields = [
+        "customerName",
+        "accountNumber",
+        "servicePlan",
+        "dueDate",
+        "currentBill",
+      ];
+
+      fields.forEach((id) => {
+        document.getElementById(id).addEventListener("input", updatePreview);
+      });
+
+      function toProperCase(text) {
+        return text
+          .toLowerCase()
+          .split(" ")
+          .filter((word) => word.trim() !== "")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return "[DATE]";
+
+        const date = new Date(dateString + "T00:00:00");
+
+        return date.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      }
+
+      function formatMoney(value) {
+        const amount = parseFloat(value || 0);
+
+        return (
+          "₱" +
+          amount.toLocaleString("en-PH", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        );
+      }
+
+      function getBillingStartDate(dueDateString) {
+        if (!dueDateString) return "[START DATE]";
+
+        const date = new Date(dueDateString + "T00:00:00");
+
+        // SAME DAY MONTHLY CYCLE
+        // Example:
+        // Apr 6 - May 6
+
+        date.setMonth(date.getMonth() - 1);
+
+        return date.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      }
+
+      function getDisconnectionDate(dueDateString) {
+        if (!dueDateString) return "[DISCONNECTION DATE]";
+
+        const date = new Date(dueDateString + "T00:00:00");
+
+        date.setDate(date.getDate() + 3);
+
+        return date.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+      }
+
+      function updatePreview() {
+        const customerNameInput = document.getElementById("customerName").value;
+
+        const customerName = customerNameInput
+          ? toProperCase(customerNameInput)
+          : "[CUSTOMER NAME]";
+
+        const accountNumber =
+          document.getElementById("accountNumber").value || "[ACCOUNT NUMBER]";
+
+        const servicePlan =
+          document.getElementById("servicePlan").value || "[SERVICE PLAN]";
+
+        const dueDateRaw = document.getElementById("dueDate").value;
+
+        const dueDate = dueDateRaw ? formatDate(dueDateRaw) : "[DUE DATE]";
+
+        const billingStart = dueDateRaw
+          ? getBillingStartDate(dueDateRaw)
+          : "[START DATE]";
+
+        const disconnectionDate = dueDateRaw
+          ? getDisconnectionDate(dueDateRaw)
+          : "[DISCONNECTION DATE]";
+
+        const currentBill = formatMoney(
+          document.getElementById("currentBill").value,
+        );
+
+        const sms = `BROADCABLE SOA
+
+Hi ${customerName},
+
+Billing Period: ${billingStart} - ${dueDate}
+Current Bill: ${currentBill}
+
+Disconnection Date: ${disconnectionDate}
+
+Account No: ${accountNumber}
+Plan: ${servicePlan}
+
+Pay via GCash:
+ED**** A.B. - 09175861966
+MI****E CH******E B. - 09776638570
+
+Send payment screenshot to fb.me/broadcable with your Name & Account No.
+
+Thank you!`;
+
+        document.getElementById("smsPreview").value = sms;
+
+        updateStats(sms);
+      }
+
+      function updateStats(text) {
+        const characters = text.length;
+
+        const smsParts = characters === 0 ? 0 : Math.ceil(characters / 160);
+
+        document.getElementById("stats").textContent =
+          `Characters: ${characters} | SMS Parts: ${smsParts}`;
+      }
+
+      async function copySMS() {
+        const text = document.getElementById("smsPreview").value;
+
+        const status = document.getElementById("copyStatus");
+
+        try {
+          await navigator.clipboard.writeText(text);
+
+          status.textContent = "SMS copied successfully.";
+
+          status.className = "success";
+        } catch (error) {
+          status.textContent = "Failed to copy SMS.";
+        }
+      }
+
+      function clearForm() {
+        fields.forEach((id) => {
+          document.getElementById(id).value = "";
+        });
+
+        document.getElementById("copyStatus").textContent = "";
+
+        updatePreview();
+      }
+
+      updatePreview();
+    </script>
+  </body>
+</html>
