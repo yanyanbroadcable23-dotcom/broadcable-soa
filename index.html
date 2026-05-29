@@ -1,8 +1,10 @@
+```html
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Broadcable SOA SMS Maker</title>
 
     <style>
@@ -13,99 +15,81 @@
       }
 
       body {
-        background: #050505;
-        color: white;
         font-family: Arial, Helvetica, sans-serif;
-        padding: 30px;
+        background: #000;
+        color: #fff;
+        padding: 20px;
       }
 
       .container {
-        max-width: 1300px;
+        max-width: 1400px;
         margin: auto;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 25px;
       }
 
-      .card {
-        background: #000;
-        border: 1px solid #222;
-        border-radius: 24px;
-        padding: 28px;
+      .panel {
+        border: 1px solid #3a3a3a;
+        border-radius: 28px;
+        padding: 30px;
+        background: #050505;
       }
 
       h1 {
-        color: #93c5fd;
-        margin-bottom: 10px;
-        font-size: 32px;
-      }
-
-      .subtitle {
-        color: #9ca3af;
-        line-height: 1.5;
+        color: #9ecbff;
         margin-bottom: 30px;
+        font-size: 52px;
       }
 
       h2 {
-        color: #93c5fd;
-        margin-bottom: 25px;
-        font-size: 28px;
+        color: #9ecbff;
+        margin-bottom: 30px;
+        font-size: 32px;
+      }
+
+      .form-group {
+        margin-bottom: 24px;
       }
 
       label {
         display: block;
         margin-bottom: 10px;
-        margin-top: 20px;
         font-size: 16px;
-        font-weight: bold;
+        font-weight: 700;
       }
 
-      input {
+      input,
+      textarea {
         width: 100%;
-        padding: 16px;
-        border-radius: 16px;
-        border: 1px solid #3f3f46;
-        background: #050505;
-        color: white;
-        font-size: 16px;
+        background: #000;
+        border: 2px solid #333;
+        color: #fff;
+        padding: 18px 20px;
+        border-radius: 18px;
+        font-size: 18px;
+        outline: none;
       }
 
       input:focus,
       textarea:focus {
-        outline: none;
-        border-color: #60a5fa;
-      }
-
-      input::placeholder {
-        color: #71717a;
+        border-color: #0066ff;
       }
 
       textarea {
-        width: 100%;
         min-height: 650px;
-        resize: vertical;
-        padding: 18px;
-        border-radius: 18px;
-        border: 1px solid #3f3f46;
-        background: #050505;
-        color: white;
-        font-size: 17px;
-        line-height: 1.6;
-      }
-
-      .buttons {
-        display: flex;
-        gap: 12px;
-        margin-top: 20px;
-        flex-wrap: wrap;
+        resize: none;
+        line-height: 1.7;
       }
 
       button {
-        padding: 14px 20px;
+        background: #1d4ed8;
+        color: #fff;
         border: none;
-        border-radius: 14px;
-        font-size: 15px;
-        font-weight: bold;
+        padding: 16px 28px;
+        border-radius: 16px;
+        font-size: 18px;
+        font-weight: 700;
         cursor: pointer;
         transition: 0.2s;
       }
@@ -114,132 +98,101 @@
         opacity: 0.9;
       }
 
-      .copy-btn {
-        background: #2563eb;
-        color: white;
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
       }
 
       .clear-btn {
-        background: #18181b;
-        border: 1px solid #3f3f46;
-        color: white;
+        background: #1f1f1f;
       }
 
       .stats {
         margin-top: 18px;
-        color: #9ca3af;
+        color: #aaa;
+        font-size: 15px;
+      }
+
+      .copy-status {
+        margin-top: 12px;
+        color: #22c55e;
         font-size: 14px;
       }
 
-      .success {
-        margin-top: 10px;
-        color: #22c55e;
-        font-weight: bold;
-      }
-
-      /* MOBILE OPTIMIZATION */
-
-      @media (max-width: 900px) {
-        body {
-          padding: 14px;
-        }
-
+      @media (max-width: 1000px) {
         .container {
           grid-template-columns: 1fr;
-          gap: 18px;
-        }
-
-        .card {
-          padding: 20px;
-          border-radius: 20px;
         }
 
         h1 {
-          font-size: 28px;
-          line-height: 1.2;
-        }
-
-        h2 {
-          font-size: 24px;
+          font-size: 40px;
         }
 
         textarea {
           min-height: 500px;
-          font-size: 16px;
-        }
-
-        input {
-          font-size: 16px;
-        }
-
-        button {
-          width: 100%;
         }
       }
     </style>
   </head>
 
   <body>
-    <h1>Broadcable SOA SMS Maker</h1>
-
-    <p class="subtitle">
-      Generate subscriber SOA SMS instantly with automatic billing period and
-      disconnection date calculation.
-    </p>
-
     <div class="container">
-      <!-- LEFT PANEL -->
+      <div class="panel">
+        <h1>Subscriber Details</h1>
 
-      <div class="card">
-        <h2>Subscriber Details</h2>
+        <div class="form-group">
+          <label>Customer Name</label>
+          <input
+            type="text"
+            id="customerName"
+            placeholder="Enter subscriber name"
+          />
+        </div>
 
-        <label>Customer Name</label>
+        <div class="form-group">
+          <label>Account Number</label>
+          <input
+            type="text"
+            id="accountNumber"
+            placeholder="Enter account number"
+          />
+        </div>
 
-        <input
-          type="text"
-          id="customerName"
-          placeholder="Enter subscriber name"
-        />
+        <div class="form-group">
+          <label>Service Plan</label>
+          <input type="text" id="servicePlan" placeholder="Example: 100 Mbps" />
+        </div>
 
-        <label>Account Number</label>
+        <div class="form-group">
+          <label>Due Date / Billing End Date</label>
+          <input type="date" id="dueDate" />
+        </div>
 
-        <input
-          type="text"
-          id="accountNumber"
-          placeholder="Enter account number"
-        />
+        <div class="form-group">
+          <label>Current Bill</label>
+          <input
+            type="number"
+            id="currentBill"
+            placeholder="0.00"
+            step="0.01"
+          />
+        </div>
 
-        <label>Service Plan</label>
-
-        <input type="text" id="servicePlan" placeholder="Example: 100 Mbps" />
-
-        <label>Due Date / Billing End Date</label>
-
-        <input type="date" id="dueDate" />
-
-        <label>Current Bill</label>
-
-        <input type="number" id="currentBill" placeholder="0.00" step="0.01" />
-
-        <div class="buttons">
+        <div class="actions">
+          <button onclick="copySMS()">Copy SMS</button>
           <button class="clear-btn" onclick="clearForm()">Clear Form</button>
         </div>
       </div>
 
-      <!-- RIGHT PANEL -->
-
-      <div class="card">
+      <div class="panel">
         <h2>SMS Preview</h2>
 
         <textarea id="smsPreview" readonly></textarea>
 
-        <div class="buttons">
-          <button class="copy-btn" onclick="copySMS()">Copy SMS</button>
-        </div>
+        <div class="copy-status" id="copyStatus"></div>
 
-        <div class="stats" id="stats">Characters: 0 | SMS Parts: 0</div>
-
-        <div id="copyStatus"></div>
+        <div class="stats" id="smsStats">Characters: 0 | SMS Parts: 0</div>
       </div>
     </div>
 
@@ -256,49 +209,14 @@
         document.getElementById(id).addEventListener("input", updatePreview);
       });
 
-      function toProperCase(text) {
-        return text
-          .toLowerCase()
-          .split(" ")
-          .filter((word) => word.trim() !== "")
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" ");
+      function formatName(name) {
+        return name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
       }
 
       function formatDate(dateString) {
-        if (!dateString) return "[DATE]";
+        if (!dateString) return "";
 
-        const date = new Date(dateString + "T00:00:00");
-
-        return date.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        });
-      }
-
-      function formatMoney(value) {
-        const amount = parseFloat(value || 0);
-
-        return (
-          "₱" +
-          amount.toLocaleString("en-PH", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })
-        );
-      }
-
-      function getBillingStartDate(dueDateString) {
-        if (!dueDateString) return "[START DATE]";
-
-        const date = new Date(dueDateString + "T00:00:00");
-
-        // SAME DAY MONTHLY CYCLE
-        // Example:
-        // Apr 6 - May 6
-
-        date.setMonth(date.getMonth() - 1);
+        const date = new Date(dateString);
 
         return date.toLocaleDateString("en-US", {
           month: "short",
@@ -307,26 +225,32 @@
         });
       }
 
-      function getDisconnectionDate(dueDateString) {
-        if (!dueDateString) return "[DISCONNECTION DATE]";
+      function calculateStartDate(dueDateString) {
+        if (!dueDateString) return "";
 
-        const date = new Date(dueDateString + "T00:00:00");
+        const dueDate = new Date(dueDateString);
 
-        date.setDate(date.getDate() + 3);
+        const startDate = new Date(dueDate);
 
-        return date.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        });
+        startDate.setMonth(startDate.getMonth() - 1);
+
+        return startDate;
+      }
+
+      function calculateDisconnectionDate(dueDateString) {
+        if (!dueDateString) return "";
+
+        const disconnectionDate = new Date(dueDateString);
+
+        disconnectionDate.setDate(disconnectionDate.getDate() + 3);
+
+        return disconnectionDate;
       }
 
       function updatePreview() {
-        const customerNameInput = document.getElementById("customerName").value;
-
-        const customerName = customerNameInput
-          ? toProperCase(customerNameInput)
-          : "[CUSTOMER NAME]";
+        const customerName =
+          formatName(document.getElementById("customerName").value) ||
+          "[CUSTOMER NAME]";
 
         const accountNumber =
           document.getElementById("accountNumber").value || "[ACCOUNT NUMBER]";
@@ -334,39 +258,34 @@
         const servicePlan =
           document.getElementById("servicePlan").value || "[SERVICE PLAN]";
 
-        const dueDateRaw = document.getElementById("dueDate").value;
+        const dueDateValue = document.getElementById("dueDate").value;
 
-        const dueDate = dueDateRaw ? formatDate(dueDateRaw) : "[DUE DATE]";
-
-        const billingStart = dueDateRaw
-          ? getBillingStartDate(dueDateRaw)
-          : "[START DATE]";
-
-        const disconnectionDate = dueDateRaw
-          ? getDisconnectionDate(dueDateRaw)
-          : "[DISCONNECTION DATE]";
-
-        const currentBill = formatMoney(
+        const currentBill = parseFloat(
           document.getElementById("currentBill").value,
         );
 
+        const amount = !isNaN(currentBill)
+          ? currentBill.toLocaleString("en-PH", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })
+          : "0.00";
+
+        const dueDate = dueDateValue ? formatDate(dueDateValue) : "[DUE DATE]";
+
+        const startDate = dueDateValue
+          ? formatDate(calculateStartDate(dueDateValue))
+          : "[START DATE]";
+
+        const disconnectionDate = dueDateValue
+          ? formatDate(calculateDisconnectionDate(dueDateValue))
+          : "[DISCONNECTION DATE]";
+
         const sms = `BROADCABLE SOA
 
-Hi ${customerName},
+Hello! ${customerName}, this is a friendly reminder for your internet subscription under Account No. ${accountNumber}. Your ${servicePlan} subscription for the billing period of ${startDate} to ${dueDate} has a current bill of PHP ${amount}. Please settle your account before the disconnection date on ${disconnectionDate}.
 
-Billing Period: ${billingStart} - ${dueDate}
-Current Bill: ${currentBill}
-
-Disconnection Date: ${disconnectionDate}
-
-Account No: ${accountNumber}
-Plan: ${servicePlan}
-
-Pay via GCash:
-ED**** A.B. - 09175861966
-MI****E CH******E B. - 09776638570
-
-Send payment screenshot to fb.me/broadcable with your Name & Account No.
+For GCash payments, you may send to ED**** A.B. - 09175861966 or MI****E CH******E B. - 09776638570. After payment, kindly send your payment screenshot to our Facebook page together with your Name & Account No.
 
 Thank you!`;
 
@@ -380,22 +299,24 @@ Thank you!`;
 
         const smsParts = characters === 0 ? 0 : Math.ceil(characters / 160);
 
-        document.getElementById("stats").textContent =
+        document.getElementById("smsStats").textContent =
           `Characters: ${characters} | SMS Parts: ${smsParts}`;
       }
 
       async function copySMS() {
-        const text = document.getElementById("smsPreview").value;
+        const sms = document.getElementById("smsPreview").value;
 
         const status = document.getElementById("copyStatus");
 
         try {
-          await navigator.clipboard.writeText(text);
+          await navigator.clipboard.writeText(sms);
 
           status.textContent = "SMS copied successfully.";
 
-          status.className = "success";
-        } catch (error) {
+          setTimeout(() => {
+            status.textContent = "";
+          }, 2500);
+        } catch {
           status.textContent = "Failed to copy SMS.";
         }
       }
@@ -405,8 +326,6 @@ Thank you!`;
           document.getElementById(id).value = "";
         });
 
-        document.getElementById("copyStatus").textContent = "";
-
         updatePreview();
       }
 
@@ -414,3 +333,4 @@ Thank you!`;
     </script>
   </body>
 </html>
+```
