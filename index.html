@@ -209,8 +209,8 @@
         document.getElementById(id).addEventListener("input", updatePreview);
       });
 
-      function formatName(name) {
-        return name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+      function formatText(text) {
+        return text.toUpperCase();
       }
 
       function formatDate(dateString) {
@@ -249,14 +249,14 @@
 
       function updatePreview() {
         const customerName =
-          formatName(document.getElementById("customerName").value) ||
+          formatText(document.getElementById("customerName").value) ||
           "[CUSTOMER NAME]";
-
         const accountNumber =
-          document.getElementById("accountNumber").value || "[ACCOUNT NUMBER]";
-
+          formatText(document.getElementById("accountNumber").value) ||
+          "[ACCOUNT NUMBER]";
         const servicePlan =
-          document.getElementById("servicePlan").value || "[SERVICE PLAN]";
+          formatText(document.getElementById("servicePlan").value) ||
+          "[SERVICE PLAN]";
 
         const dueDateValue = document.getElementById("dueDate").value;
 
