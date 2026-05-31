@@ -1,336 +1,458 @@
 ```html
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <title>Broadcable SOA SMS Maker</title>
+<title>Broadcable SOA SMS Maker</title>
 
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+<style>
 
-      body {
-        font-family: Arial, Helvetica, sans-serif;
-        background: #000;
-        color: #fff;
-        padding: 20px;
-      }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-      .container {
-        max-width: 1400px;
-        margin: auto;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 25px;
-      }
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#000;
+    color:#fff;
+    padding:20px;
+}
 
-      .panel {
-        border: 1px solid #3a3a3a;
-        border-radius: 28px;
-        padding: 30px;
-        background: #050505;
-      }
+.container{
+    max-width:1400px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+}
 
-      h1 {
-        color: #9ecbff;
-        margin-bottom: 30px;
-        font-size: 52px;
-      }
+.panel{
+    border:1px solid #333;
+    border-radius:28px;
+    padding:30px;
+    background:#050505;
+}
 
-      h2 {
-        color: #9ecbff;
-        margin-bottom: 30px;
-        font-size: 32px;
-      }
+h1{
+    color:#9ecbff;
+    margin-bottom:30px;
+    font-size:48px;
+}
 
-      .form-group {
-        margin-bottom: 24px;
-      }
+h2{
+    color:#9ecbff;
+    margin-bottom:25px;
+    font-size:30px;
+}
 
-      label {
-        display: block;
-        margin-bottom: 10px;
-        font-size: 16px;
-        font-weight: 700;
-      }
+.form-group{
+    margin-bottom:24px;
+}
 
-      input,
-      textarea {
-        width: 100%;
-        background: #000;
-        border: 2px solid #333;
-        color: #fff;
-        padding: 18px 20px;
-        border-radius: 18px;
-        font-size: 18px;
-        outline: none;
-      }
+label{
+    display:block;
+    margin-bottom:10px;
+    font-size:16px;
+    font-weight:700;
+}
 
-      input:focus,
-      textarea:focus {
-        border-color: #0066ff;
-      }
+input,
+textarea{
+    width:100%;
+    background:#000;
+    border:2px solid #333;
+    color:#fff;
+    padding:18px 20px;
+    border-radius:18px;
+    font-size:18px;
+    outline:none;
+}
 
-      textarea {
-        min-height: 650px;
-        resize: none;
-        line-height: 1.7;
-      }
+input:focus,
+textarea:focus{
+    border-color:#2563eb;
+}
 
-      button {
-        background: #1d4ed8;
-        color: #fff;
-        border: none;
-        padding: 16px 28px;
-        border-radius: 16px;
-        font-size: 18px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: 0.2s;
-      }
+textarea{
+    min-height:650px;
+    resize:none;
+    line-height:1.7;
+}
 
-      button:hover {
-        opacity: 0.9;
-      }
+.actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
 
-      .actions {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
+button{
+    background:#2563eb;
+    color:#fff;
+    border:none;
+    padding:16px 26px;
+    border-radius:16px;
+    font-size:17px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.2s;
+}
 
-      .clear-btn {
-        background: #1f1f1f;
-      }
+button:hover{
+    opacity:.9;
+}
 
-      .stats {
-        margin-top: 18px;
-        color: #aaa;
-        font-size: 15px;
-      }
+.clear-btn{
+    background:#1f1f1f;
+}
 
-      .copy-status {
-        margin-top: 12px;
-        color: #22c55e;
-        font-size: 14px;
-      }
+.stats{
+    margin-top:18px;
+    color:#999;
+    font-size:14px;
+}
 
-      @media (max-width: 1000px) {
-        .container {
-          grid-template-columns: 1fr;
-        }
+.copy-status{
+    margin-top:12px;
+    color:#22c55e;
+    font-size:14px;
+}
 
-        h1 {
-          font-size: 40px;
-        }
+@media(max-width:1000px){
 
-        textarea {
-          min-height: 500px;
-        }
-      }
-    </style>
-  </head>
+    body{
+        padding:14px;
+    }
 
-  <body>
-    <div class="container">
-      <div class="panel">
+    .container{
+        grid-template-columns:1fr;
+    }
+
+    .panel{
+        padding:22px;
+        border-radius:22px;
+    }
+
+    h1{
+        font-size:36px;
+    }
+
+    h2{
+        font-size:26px;
+    }
+
+    textarea{
+        min-height:500px;
+    }
+
+    button{
+        width:100%;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LEFT PANEL -->
+
+    <div class="panel">
+
         <h1>Subscriber Details</h1>
 
         <div class="form-group">
-          <label>Customer Name</label>
-          <input
-            type="text"
-            id="customerName"
-            placeholder="Enter subscriber name"
-          />
+            <label>Customer Name</label>
+            <input
+                type="text"
+                id="customerName"
+                placeholder="Enter subscriber name"
+            />
         </div>
 
         <div class="form-group">
-          <label>Account Number</label>
-          <input
-            type="text"
-            id="accountNumber"
-            placeholder="Enter account number"
-          />
+            <label>Account Number</label>
+            <input
+                type="text"
+                id="accountNumber"
+                placeholder="Enter account number"
+            />
         </div>
 
         <div class="form-group">
-          <label>Service Plan</label>
-          <input type="text" id="servicePlan" placeholder="Example: 100 Mbps" />
+            <label>Service Plan</label>
+            <input
+                type="text"
+                id="servicePlan"
+                placeholder="Example: 100 MBPS"
+            />
         </div>
 
         <div class="form-group">
-          <label>Due Date / Billing End Date</label>
-          <input type="date" id="dueDate" />
+            <label>Due Date / Billing End Date</label>
+            <input
+                type="date"
+                id="dueDate"
+            />
         </div>
 
         <div class="form-group">
-          <label>Current Bill</label>
-          <input
-            type="number"
-            id="currentBill"
-            placeholder="0.00"
-            step="0.01"
-          />
+            <label>Current Bill</label>
+            <input
+                type="number"
+                id="currentBill"
+                placeholder="0.00"
+                step="0.01"
+            />
         </div>
 
         <div class="actions">
-          <button onclick="copySMS()">Copy SMS</button>
-          <button class="clear-btn" onclick="clearForm()">Clear Form</button>
+            <button onclick="copySMS()">
+                Copy SMS
+            </button>
+
+            <button
+                class="clear-btn"
+                onclick="clearForm()"
+            >
+                Clear Form
+            </button>
         </div>
-      </div>
 
-      <div class="panel">
-        <h2>SMS Preview</h2>
-
-        <textarea id="smsPreview" readonly></textarea>
-
-        <div class="copy-status" id="copyStatus"></div>
-
-        <div class="stats" id="smsStats">Characters: 0 | SMS Parts: 0</div>
-      </div>
     </div>
 
-    <script>
-      const fields = [
-        "customerName",
-        "accountNumber",
-        "servicePlan",
-        "dueDate",
-        "currentBill",
-      ];
+    <!-- RIGHT PANEL -->
 
-      fields.forEach((id) => {
-        document.getElementById(id).addEventListener("input", updatePreview);
-      });
+    <div class="panel">
 
-      function formatText(text) {
-        return text.toUpperCase();
-      }
+        <h2>SMS Preview</h2>
 
-      function formatDate(dateString) {
-        if (!dateString) return "";
+        <textarea
+            id="smsPreview"
+            readonly
+        ></textarea>
 
-        const date = new Date(dateString);
+        <div
+            class="copy-status"
+            id="copyStatus"
+        ></div>
 
-        return date.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        });
-      }
+        <div
+            class="stats"
+            id="smsStats"
+        >
+            Characters: 0 | SMS Parts: 0
+        </div>
 
-      function calculateStartDate(dueDateString) {
-        if (!dueDateString) return "";
+    </div>
 
-        const dueDate = new Date(dueDateString);
+</div>
 
-        const startDate = new Date(dueDate);
+<script>
 
-        startDate.setMonth(startDate.getMonth() - 1);
+const fields = [
+    "customerName",
+    "accountNumber",
+    "servicePlan",
+    "dueDate",
+    "currentBill"
+];
 
-        return startDate;
-      }
+fields.forEach(id => {
 
-      function calculateDisconnectionDate(dueDateString) {
-        if (!dueDateString) return "";
+    document
+        .getElementById(id)
+        .addEventListener("input", updatePreview);
 
-        const disconnectionDate = new Date(dueDateString);
+});
 
-        disconnectionDate.setDate(disconnectionDate.getDate() + 3);
+function formatText(text){
 
-        return disconnectionDate;
-      }
+    return text.toUpperCase();
 
-      function updatePreview() {
-        const customerName =
-          formatText(document.getElementById("customerName").value) ||
-          "[CUSTOMER NAME]";
-        const accountNumber =
-          formatText(document.getElementById("accountNumber").value) ||
-          "[ACCOUNT NUMBER]";
-        const servicePlan =
-          formatText(document.getElementById("servicePlan").value) ||
-          "[SERVICE PLAN]";
+}
 
-        const dueDateValue = document.getElementById("dueDate").value;
+function formatDate(dateString){
 
-        const currentBill = parseFloat(
-          document.getElementById("currentBill").value,
+    if(!dateString) return "";
+
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString("en-US",{
+        month:"short",
+        day:"numeric",
+        year:"numeric"
+    });
+
+}
+
+function calculateStartDate(dueDateString){
+
+    if(!dueDateString) return "";
+
+    const dueDate = new Date(dueDateString);
+
+    const startDate = new Date(dueDate);
+
+    startDate.setMonth(
+        startDate.getMonth() - 1
+    );
+
+    return startDate;
+
+}
+
+function calculateDisconnectionDate(dueDateString){
+
+    if(!dueDateString) return "";
+
+    const disconnectionDate =
+        new Date(dueDateString);
+
+    disconnectionDate.setDate(
+        disconnectionDate.getDate() + 3
+    );
+
+    return disconnectionDate;
+
+}
+
+function updatePreview(){
+
+    const customerName = formatText(
+        document.getElementById("customerName").value
+    ) || "[CUSTOMER NAME]";
+
+    const accountNumber = formatText(
+        document.getElementById("accountNumber").value
+    ) || "[ACCOUNT NUMBER]";
+
+    const servicePlan = formatText(
+        document.getElementById("servicePlan").value
+    ) || "[SERVICE PLAN]";
+
+    const dueDateValue =
+        document.getElementById("dueDate").value;
+
+    const currentBill =
+        parseFloat(
+            document.getElementById("currentBill").value
         );
 
-        const amount = !isNaN(currentBill)
-          ? currentBill.toLocaleString("en-PH", {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })
-          : "0.00";
+    const amount = !isNaN(currentBill)
+        ? currentBill.toLocaleString("en-PH",{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        })
+        : "0.00";
 
-        const dueDate = dueDateValue ? formatDate(dueDateValue) : "[DUE DATE]";
+    const dueDate = dueDateValue
+        ? formatDate(dueDateValue)
+        : "[DUE DATE]";
 
-        const startDate = dueDateValue
-          ? formatDate(calculateStartDate(dueDateValue))
-          : "[START DATE]";
+    const startDate = dueDateValue
+        ? formatDate(
+            calculateStartDate(dueDateValue)
+        )
+        : "[START DATE]";
 
-        const disconnectionDate = dueDateValue
-          ? formatDate(calculateDisconnectionDate(dueDateValue))
-          : "[DISCONNECTION DATE]";
+    const disconnectionDate = dueDateValue
+        ? formatDate(
+            calculateDisconnectionDate(dueDateValue)
+        )
+        : "[DISCONNECTION DATE]";
 
-        const sms = `BROADCABLE SOA
+    const sms =
+`BROADCABLE SOA
 
-Hello! ${customerName}, this is a friendly reminder for your internet subscription under Account No. ${accountNumber}. Your ${servicePlan} subscription for the billing period of ${startDate} to ${dueDate} has a current bill of PHP ${amount}. Please settle your account before the disconnection date on ${disconnectionDate}.
+Hello! ${customerName}, this is a friendly reminder for your subscription under Account No. ${accountNumber}. Your ${servicePlan} subscription for the billing period of ${startDate} to ${dueDate} has a current bill of PHP ${amount}. Please settle your account before the disconnection date on ${disconnectionDate}.
 
-For GCash payments, you may send to ED**** A.B. - 09175861966 or MI****E CH******E B. - 09776638570. After payment, kindly send your payment screenshot to our Facebook page together with your Name & Account No.
+For GCash payments, you may send to ED**** A.B. - 09175861966 or MI****E CH******E B. - 09776638570. Kindly indicate your Name & Account No. in the optional message section when sending payment. After payment, please send your payment screenshot to our Facebook page.
 
 Thank you!`;
 
-        document.getElementById("smsPreview").value = sms;
+    document.getElementById(
+        "smsPreview"
+    ).value = sms;
 
-        updateStats(sms);
-      }
+    updateStats(sms);
 
-      function updateStats(text) {
-        const characters = text.length;
+}
 
-        const smsParts = characters === 0 ? 0 : Math.ceil(characters / 160);
+function updateStats(text){
 
-        document.getElementById("smsStats").textContent =
-          `Characters: ${characters} | SMS Parts: ${smsParts}`;
-      }
+    const characters = text.length;
 
-      async function copySMS() {
-        const sms = document.getElementById("smsPreview").value;
+    const smsParts =
+        characters === 0
+        ? 0
+        : Math.ceil(characters / 160);
 
-        const status = document.getElementById("copyStatus");
+    document.getElementById(
+        "smsStats"
+    ).textContent =
+        `Characters: ${characters} | SMS Parts: ${smsParts}`;
 
-        try {
-          await navigator.clipboard.writeText(sms);
+}
 
-          status.textContent = "SMS copied successfully.";
+async function copySMS(){
 
-          setTimeout(() => {
+    const sms =
+        document.getElementById(
+            "smsPreview"
+        ).value;
+
+    const status =
+        document.getElementById(
+            "copyStatus"
+        );
+
+    try{
+
+        await navigator.clipboard.writeText(sms);
+
+        status.textContent =
+            "SMS copied successfully.";
+
+        setTimeout(() => {
+
             status.textContent = "";
-          }, 2500);
-        } catch {
-          status.textContent = "Failed to copy SMS.";
-        }
-      }
 
-      function clearForm() {
-        fields.forEach((id) => {
-          document.getElementById(id).value = "";
-        });
+        }, 2500);
 
-        updatePreview();
-      }
+    }
 
-      updatePreview();
-    </script>
-  </body>
+    catch{
+
+        status.textContent =
+            "Failed to copy SMS.";
+
+    }
+
+}
+
+function clearForm(){
+
+    fields.forEach(id => {
+
+        document.getElementById(id).value = "";
+
+    });
+
+    updatePreview();
+
+}
+
+updatePreview();
+
+</script>
+
+</body>
 </html>
 ```
