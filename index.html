@@ -81,6 +81,19 @@
         line-height: 1.7;
       }
 
+      /* REMOVE NUMBER INPUT ARROWS */
+
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      input[type="number"] {
+        appearance: textfield;
+        -moz-appearance: textfield;
+      }
+
       /* IMPROVED DATE INPUT */
 
       .date-wrapper {
@@ -220,30 +233,23 @@
       <div class="panel">
         <h1>Subscriber Details</h1>
 
-        <div class="form-group">
-          <label>Customer Name</label>
-          <input
-            type="text"
-            id="customerName"
-            placeholder="Enter subscriber name"
-          />
-        </div>
+        <!-- NEW COMBINED INPUT -->
 
         <div class="form-group">
-          <label>Account Number</label>
+          <label>Subscriber Info</label>
+
           <input
             type="text"
-            id="accountNumber"
-            placeholder="Enter account number"
+            id="subscriberInfo"
+            placeholder="Example: Ryan Cunanan | 540003181"
           />
         </div>
 
         <div class="form-group">
           <label>Service Plan</label>
+
           <input type="text" id="servicePlan" placeholder="Example: 100 MBPS" />
         </div>
-
-        <!-- IMPROVED DATE INPUT -->
 
         <div class="form-group">
           <label>Due Date / Billing End Date</label>
@@ -255,11 +261,12 @@
 
         <div class="form-group">
           <label>Current Bill</label>
+
           <input
-            type="number"
+            type="text"
             id="currentBill"
             placeholder="0.00"
-            step="0.01"
+            inputmode="decimal"
           />
         </div>
 
@@ -285,8 +292,7 @@
 
     <script>
       const fields = [
-        "customerName",
-        "accountNumber",
+        "subscriberInfo",
         "servicePlan",
         "dueDate",
         "currentBill",
@@ -334,14 +340,32 @@
         return disconnectionDate;
       }
 
-      function updatePreview() {
-        const customerName =
-          formatText(document.getElementById("customerName").value) ||
-          "[CUSTOMER NAME]";
+      /* AUTO SPLIT NAME + ACCOUNT NUMBER */
 
-        const accountNumber =
-          formatText(document.getElementById("accountNumber").value) ||
-          "[ACCOUNT NUMBER]";
+      function parseSubscriberInfo(text) {
+        if (!text.includes("|")) {
+          return {
+            name: text,
+            account: "",
+          };
+        }
+
+        const parts = text.split("|");
+
+        return {
+          name: parts[0].trim(),
+          account: parts[1].trim(),
+        };
+      }
+
+      function updatePreview() {
+        const subscriberRaw = document.getElementById("subscriberInfo").value;
+
+        const parsed = parseSubscriberInfo(subscriberRaw);
+
+        const customerName = formatText(parsed.name) || "[CUSTOMER NAME]";
+
+        const accountNumber = formatText(parsed.account) || "[ACCOUNT NUMBER]";
 
         const servicePlan =
           formatText(document.getElementById("servicePlan").value) ||
