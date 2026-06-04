@@ -299,7 +299,13 @@
       ];
 
       fields.forEach((id) => {
-        document.getElementById(id).addEventListener("input", updatePreview);
+        document.getElementById(id).addEventListener("input", () => {
+          if (id === "servicePlan") {
+            autoFillCurrentBill();
+          }
+
+          updatePreview();
+        });
       });
 
       function formatText(text) {
@@ -356,6 +362,29 @@
           name: parts[0].trim(),
           account: parts[1].trim(),
         };
+      }
+      function autoFillCurrentBill() {
+        const servicePlan = document
+          .getElementById("servicePlan")
+          .value.trim()
+          .toLowerCase();
+
+        const currentBillField = document.getElementById("currentBill");
+
+        const plans = {
+          bronze: "750",
+          silver: "1100",
+          gold: "1500",
+          "bronze with catv": "900",
+          "silver with catv": "1250",
+          "gold with catv": "1650",
+        };
+
+        if (plans.hasOwnProperty(servicePlan)) {
+          currentBillField.value = plans[servicePlan];
+        } else {
+          currentBillField.value = "";
+        }
       }
 
       function updatePreview() {
