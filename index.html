@@ -233,16 +233,39 @@
       <div class="panel">
         <h1>Subscriber Details</h1>
 
-        <!-- NEW COMBINED INPUT -->
+        <!-- SUBSCRIBER MODE -->
 
         <div class="form-group">
-          <label>Subscriber Info</label>
+          <label style="display:flex;justify-content:space-between;align-items:center;">
+            <span>Subscriber Info</span>
+            <span style="font-size:14px;font-weight:400;">
+              <input type="checkbox" id="toggleSeparate" style="width:auto;margin-right:6px;">
+              Separate Fields
+            </span>
+          </label>
 
-          <input
-            type="text"
-            id="subscriberInfo"
-            placeholder="Example: Ryan Cunanan | 540003181"
-          />
+          <div id="combinedContainer">
+            <input
+              type="text"
+              id="subscriberInfo"
+              placeholder="Example: Ryan Cunanan | 540003181"
+            />
+          </div>
+
+          <div id="separateContainer" style="display:none;margin-top:12px;">
+            <input
+              type="text"
+              id="customerName"
+              placeholder="Customer Name"
+              style="margin-bottom:12px;"
+            />
+
+            <input
+              type="text"
+              id="accountNumber"
+              placeholder="Account Number"
+            />
+          </div>
         </div>
 
         <div class="form-group">
@@ -293,19 +316,45 @@
     <script>
       const fields = [
         "subscriberInfo",
+        "customerName",
+        "accountNumber",
         "servicePlan",
         "dueDate",
         "currentBill",
       ];
 
       fields.forEach((id) => {
-        document.getElementById(id).addEventListener("input", () => {
-          if (id === "servicePlan") {
-            autoFillCurrentBill();
-          }
+        const el = document.getElementById(id);
+        if(el){
+          el.addEventListener("input", () => {
+            if (id === "servicePlan") {
+              autoFillCurrentBill();
+            }
+            updatePreview();
+          });
+        }
+      });
 
-          updatePreview();
-        });
+      document.getElementById("toggleSeparate").addEventListener("change", function(){
+        const combined=document.getElementById("combinedContainer");
+        const separate=document.getElementById("separateContainer");
+
+        if(this.checked){
+          const parsed=parseSubscriberInfo(document.getElementById("subscriberInfo").value);
+          document.getElementById("customerName").value=parsed.name;
+          document.getElementById("accountNumber").value=parsed.account;
+          combined.style.display="none";
+          separate.style.display="block";
+        }else{
+          document.getElementById("subscriberInfo").value=
+            document.getElementById("customerName").value +
+            " | " +
+            document.getElementById("accountNumber").value;
+          combined.style.display="block";
+          separate.style.display="none";
+        }
+
+        updatePreview();
       });
 
       function formatText(text) {
@@ -388,9 +437,17 @@
       }
 
       function updatePreview() {
-        const subscriberRaw = document.getElementById("subscriberInfo").value;
+        let parsed;
 
-        const parsed = parseSubscriberInfo(subscriberRaw);
+        if(document.getElementById("toggleSeparate").checked){
+          parsed = {
+            name: document.getElementById("customerName").value,
+            account: document.getElementById("accountNumber").value
+          };
+        }else{
+          const subscriberRaw = document.getElementById("subscriberInfo").value;
+          parsed = parseSubscriberInfo(subscriberRaw);
+        }
 
         const customerName = formatText(parsed.name) || "[CUSTOMER NAME]";
 
@@ -465,8 +522,13 @@ Thank you!`;
 
       function clearForm() {
         fields.forEach((id) => {
-          document.getElementById(id).value = "";
+          const el=document.getElementById(id);
+          if(el) el.value="";
         });
+
+        document.getElementById("toggleSeparate").checked=false;
+        document.getElementById("combinedContainer").style.display="block";
+        document.getElementById("separateContainer").style.display="none";
 
         updatePreview();
       }
