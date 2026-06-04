@@ -236,10 +236,20 @@
         <!-- SUBSCRIBER MODE -->
 
         <div class="form-group">
-          <label style="display:flex;justify-content:space-between;align-items:center;">
+          <label
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+            "
+          >
             <span>Subscriber Info</span>
-            <span style="font-size:14px;font-weight:400;">
-              <input type="checkbox" id="toggleSeparate" style="width:auto;margin-right:6px;">
+            <span style="font-size: 14px; font-weight: 400">
+              <input
+                type="checkbox"
+                id="toggleSeparate"
+                style="width: auto; margin-right: 6px"
+              />
               Separate Fields
             </span>
           </label>
@@ -252,12 +262,12 @@
             />
           </div>
 
-          <div id="separateContainer" style="display:none;margin-top:12px;">
+          <div id="separateContainer" style="display: none; margin-top: 12px">
             <input
               type="text"
               id="customerName"
               placeholder="Customer Name"
-              style="margin-bottom:12px;"
+              style="margin-bottom: 12px"
             />
 
             <input
@@ -325,7 +335,7 @@
 
       fields.forEach((id) => {
         const el = document.getElementById(id);
-        if(el){
+        if (el) {
           el.addEventListener("input", () => {
             if (id === "servicePlan") {
               autoFillCurrentBill();
@@ -335,27 +345,31 @@
         }
       });
 
-      document.getElementById("toggleSeparate").addEventListener("change", function(){
-        const combined=document.getElementById("combinedContainer");
-        const separate=document.getElementById("separateContainer");
+      document
+        .getElementById("toggleSeparate")
+        .addEventListener("change", function () {
+          const combined = document.getElementById("combinedContainer");
+          const separate = document.getElementById("separateContainer");
 
-        if(this.checked){
-          const parsed=parseSubscriberInfo(document.getElementById("subscriberInfo").value);
-          document.getElementById("customerName").value=parsed.name;
-          document.getElementById("accountNumber").value=parsed.account;
-          combined.style.display="none";
-          separate.style.display="block";
-        }else{
-          document.getElementById("subscriberInfo").value=
-            document.getElementById("customerName").value +
-            " | " +
-            document.getElementById("accountNumber").value;
-          combined.style.display="block";
-          separate.style.display="none";
-        }
+          if (this.checked) {
+            const parsed = parseSubscriberInfo(
+              document.getElementById("subscriberInfo").value,
+            );
+            document.getElementById("customerName").value = parsed.name;
+            document.getElementById("accountNumber").value = parsed.account;
+            combined.style.display = "none";
+            separate.style.display = "block";
+          } else {
+            document.getElementById("subscriberInfo").value =
+              document.getElementById("customerName").value +
+              " | " +
+              document.getElementById("accountNumber").value;
+            combined.style.display = "block";
+            separate.style.display = "none";
+          }
 
-        updatePreview();
-      });
+          updatePreview();
+        });
 
       function formatText(text) {
         return text.toUpperCase();
@@ -439,12 +453,12 @@
       function updatePreview() {
         let parsed;
 
-        if(document.getElementById("toggleSeparate").checked){
+        if (document.getElementById("toggleSeparate").checked) {
           parsed = {
             name: document.getElementById("customerName").value,
-            account: document.getElementById("accountNumber").value
+            account: document.getElementById("accountNumber").value,
           };
-        }else{
+        } else {
           const subscriberRaw = document.getElementById("subscriberInfo").value;
           parsed = parseSubscriberInfo(subscriberRaw);
         }
@@ -522,13 +536,9 @@ Thank you!`;
 
       function clearForm() {
         fields.forEach((id) => {
-          const el=document.getElementById(id);
-          if(el) el.value="";
+          const el = document.getElementById(id);
+          if (el) el.value = "";
         });
-
-        document.getElementById("toggleSeparate").checked=false;
-        document.getElementById("combinedContainer").style.display="block";
-        document.getElementById("separateContainer").style.display="none";
 
         updatePreview();
       }
