@@ -233,49 +233,16 @@
       <div class="panel">
         <h1>Subscriber Details</h1>
 
-        <!-- SUBSCRIBER MODE -->
+        <!-- NEW COMBINED INPUT -->
 
         <div class="form-group">
-          <label
-            style="
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-            "
-          >
-            <span>Subscriber Info</span>
-            <span style="font-size: 14px; font-weight: 400">
-              <input
-                type="checkbox"
-                id="toggleSeparate"
-                style="width: auto; margin-right: 6px"
-              />
-              Separate Fields
-            </span>
-          </label>
+          <label>Subscriber Info</label>
 
-          <div id="combinedContainer">
-            <input
-              type="text"
-              id="subscriberInfo"
-              placeholder="Example: Ryan Cunanan | 540003181"
-            />
-          </div>
-
-          <div id="separateContainer" style="display: none; margin-top: 12px">
-            <input
-              type="text"
-              id="customerName"
-              placeholder="Customer Name"
-              style="margin-bottom: 12px"
-            />
-
-            <input
-              type="text"
-              id="accountNumber"
-              placeholder="Account Number"
-            />
-          </div>
+          <input
+            type="text"
+            id="subscriberInfo"
+            placeholder="Example: Ryan Cunanan | 540003181"
+          />
         </div>
 
         <div class="form-group">
@@ -326,50 +293,20 @@
     <script>
       const fields = [
         "subscriberInfo",
-        "customerName",
-        "accountNumber",
         "servicePlan",
         "dueDate",
         "currentBill",
       ];
 
       fields.forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.addEventListener("input", () => {
-            if (id === "servicePlan") {
-              autoFillCurrentBill();
-            }
-            updatePreview();
-          });
-        }
-      });
-
-      document
-        .getElementById("toggleSeparate")
-        .addEventListener("change", function () {
-          const combined = document.getElementById("combinedContainer");
-          const separate = document.getElementById("separateContainer");
-
-          if (this.checked) {
-            const parsed = parseSubscriberInfo(
-              document.getElementById("subscriberInfo").value,
-            );
-            document.getElementById("customerName").value = parsed.name;
-            document.getElementById("accountNumber").value = parsed.account;
-            combined.style.display = "none";
-            separate.style.display = "block";
-          } else {
-            document.getElementById("subscriberInfo").value =
-              document.getElementById("customerName").value +
-              " | " +
-              document.getElementById("accountNumber").value;
-            combined.style.display = "block";
-            separate.style.display = "none";
+        document.getElementById(id).addEventListener("input", () => {
+          if (id === "servicePlan") {
+            autoFillCurrentBill();
           }
 
           updatePreview();
         });
+      });
 
       function formatText(text) {
         return text.toUpperCase();
@@ -451,17 +388,9 @@
       }
 
       function updatePreview() {
-        let parsed;
+        const subscriberRaw = document.getElementById("subscriberInfo").value;
 
-        if (document.getElementById("toggleSeparate").checked) {
-          parsed = {
-            name: document.getElementById("customerName").value,
-            account: document.getElementById("accountNumber").value,
-          };
-        } else {
-          const subscriberRaw = document.getElementById("subscriberInfo").value;
-          parsed = parseSubscriberInfo(subscriberRaw);
-        }
+        const parsed = parseSubscriberInfo(subscriberRaw);
 
         const customerName = formatText(parsed.name) || "[CUSTOMER NAME]";
 
@@ -500,6 +429,8 @@ Hello! ${customerName}, this is a friendly reminder for your subscription under 
 
 For GCash payments, you may send to ED**** A.B. - 09175861966 or MI****E CH******E B. - 09776638570. Kindly indicate your Name & Account No. in the optional message section when sending payment. After payment, please send your payment screenshot to our Facebook page. Payments without a Name & Account No. may not be acknowledged or verified properly.
 
+If you have already settled your account, please disregard this message.
+
 Thank you!`;
 
         document.getElementById("smsPreview").value = sms;
@@ -536,8 +467,7 @@ Thank you!`;
 
       function clearForm() {
         fields.forEach((id) => {
-          const el = document.getElementById(id);
-          if (el) el.value = "";
+          document.getElementById(id).value = "";
         });
 
         updatePreview();
