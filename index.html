@@ -191,6 +191,17 @@
         font-size: 14px;
       }
 
+      .toggle-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
       /* MOBILE */
 
       @media (max-width: 1000px) {
@@ -233,16 +244,36 @@
       <div class="panel">
         <h1>Subscriber Details</h1>
 
-        <!-- NEW COMBINED INPUT -->
+        <div class="toggle-row">
+          <label style="margin-bottom: 0">Subscriber Info</label>
+          <label style="margin-bottom: 0; font-size: 14px; font-weight: 400">
+            <input
+              type="checkbox"
+              id="separateToggle"
+              style="width: auto; margin-right: 6px"
+            />
+            Separate Fields
+          </label>
+        </div>
 
-        <div class="form-group">
-          <label>Subscriber Info</label>
-
+        <div class="form-group" id="combinedGroup">
           <input
             type="text"
             id="subscriberInfo"
             placeholder="Example: Ryan Cunanan | 540003181"
           />
+        </div>
+
+        <div id="separateGroup" class="hidden">
+          <div class="form-group">
+            <label>Customer Name</label>
+            <input type="text" id="customerName" />
+          </div>
+
+          <div class="form-group">
+            <label>Account Number</label>
+            <input type="text" id="accountNumber" />
+          </div>
         </div>
 
         <div class="form-group">
@@ -272,7 +303,9 @@
 
         <div class="actions">
           <button onclick="copySMS()">Copy SMS</button>
-
+          <button onclick="copyCorrectionMessage()">
+            Copy Correction Message
+          </button>
           <button class="clear-btn" onclick="clearForm()">Clear Form</button>
         </div>
       </div>
@@ -293,6 +326,8 @@
     <script>
       const fields = [
         "subscriberInfo",
+        "customerName",
+        "accountNumber",
         "servicePlan",
         "dueDate",
         "currentBill",
@@ -307,6 +342,37 @@
           updatePreview();
         });
       });
+
+      document
+        .getElementById("separateToggle")
+        .addEventListener("change", () => {
+          const enabled = document.getElementById("separateToggle").checked;
+
+          if (enabled) {
+            const parsed = parseSubscriberInfo(
+              document.getElementById("subscriberInfo").value,
+            );
+
+            document.getElementById("customerName").value = parsed.name;
+            document.getElementById("accountNumber").value = parsed.account;
+
+            document.getElementById("combinedGroup").classList.add("hidden");
+            document.getElementById("separateGroup").classList.remove("hidden");
+          } else {
+            const name = document.getElementById("customerName").value.trim();
+            const account = document
+              .getElementById("accountNumber")
+              .value.trim();
+
+            document.getElementById("subscriberInfo").value =
+              name || account ? `${name} | ${account}` : "";
+
+            document.getElementById("combinedGroup").classList.remove("hidden");
+            document.getElementById("separateGroup").classList.add("hidden");
+          }
+
+          updatePreview();
+        });
 
       function formatText(text) {
         return text.toUpperCase();
@@ -388,9 +454,17 @@
       }
 
       function updatePreview() {
-        const subscriberRaw = document.getElementById("subscriberInfo").value;
+        let parsed;
 
-        const parsed = parseSubscriberInfo(subscriberRaw);
+        if (document.getElementById("separateToggle").checked) {
+          parsed = {
+            name: document.getElementById("customerName").value,
+            account: document.getElementById("accountNumber").value,
+          };
+        } else {
+          const subscriberRaw = document.getElementById("subscriberInfo").value;
+          parsed = parseSubscriberInfo(subscriberRaw);
+        }
 
         const customerName = formatText(parsed.name) || "[CUSTOMER NAME]";
 
@@ -445,6 +519,29 @@ Thank you!`;
 
         document.getElementById("smsStats").textContent =
           `Characters: ${characters} | SMS Parts: ${smsParts}`;
+      }
+
+      async function copyCorrectionMessage() {
+        const status = document.getElementById("copyStatus");
+
+        const message = `Good day!
+
+Please disregard the previous invoice as it was sent incorrectly due to a system-generated error. We sincerely apologize for any inconvenience this may have caused.
+
+Kindly refer to the corrected invoice sent with this message.
+
+Thank you for your understanding.`;
+
+        try {
+          await navigator.clipboard.writeText(message);
+          status.textContent = "Correction message copied successfully.";
+
+          setTimeout(() => {
+            status.textContent = "";
+          }, 2500);
+        } catch {
+          status.textContent = "Failed to copy correction message.";
+        }
       }
 
       async function copySMS() {
